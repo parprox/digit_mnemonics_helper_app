@@ -1,3 +1,15 @@
+from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.lang import Builder
+from kivy.core.window import Window
+
+#Set the app size
+Window.size = (500, 700)
+
+#Прямое указание, какой файл дизайна использовать
+Builder.load_file('digit_memory.kv')
+
+
 empty_chars_array = ["а", "б", "е", "ё", "ж", "з", "и", "й", "л", "о",
                      "р", "у", "ф", "х", "ц", "ч", "ъ", "ы", "ь", "э", "ю", "я"]
 
@@ -59,13 +71,12 @@ def create_list_from_file(input_number):
             all_words.append(line)
     return all_words
 
-def main():
+def words_finder(input_number):
     words = []
     with open('russian_nouns.txt', encoding='UTF-8') as file:
         for line in file:
             words.append([line, -1])
 
-    input_number = input('Введите число: ')
 
     for digit in input_number:
         finding_letter = return_letter_from_number(digit)
@@ -102,7 +113,8 @@ def main():
                 try:
                     words.remove(word)
                 except ValueError:
-                    print('Не могу удалить', word)
+                    #print('Не могу удалить', word)
+                    pass
 
 
     unsuitable_words = []
@@ -114,14 +126,41 @@ def main():
         try:
             words.remove(word)
         except ValueError:
-            print('Не могу удалить', word)
+            # print('Не могу удалить', word)
+            pass
 
     if words:
-        for word in words:
-            print(word[0])
+        return words
     else:
-        print('Я ничего не нашёл')
+        return 'Я ничего не нашёл'
 
+class MyLayout(Widget):
+    def number_press(self, button_number):
+        if self.ids.words_output.text == "0":
+            self.ids.words_output.text = str(button_number)
+        elif self.ids.words_output.text == "Error":
+            self.ids.words_output.text = "0"
+        else:
+            self.ids.words_output.text += str(button_number)
+
+    def search(self):
+        prior = self.ids.words_output.text
+        try:
+            answer = str()
+            for word in words_finder(prior):
+                answer += word[0]
+            self.ids.words_output.text = answer
+        except Exception:
+            self.ids.words_output.text = 'Error'
+
+    def clear(self):
+        self.ids.words_output.text = "0"
+
+class DigitMemoryApp(App):
+    pass
+    def build(self):
+        Window.clearcolor = (1, 1, 1, 1)
+        return MyLayout()
 
 if __name__ == '__main__':
-    main()
+    DigitMemoryApp().run()
