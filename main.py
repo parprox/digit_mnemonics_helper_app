@@ -1,7 +1,11 @@
 from kivy.app import App
+from kivy.properties import StringProperty
+from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.core.window import Window
+
+TextInput
 
 #Set the app size
 Window.size = (500, 700)
@@ -135,8 +139,14 @@ def words_finder(input_number):
         return 'Я ничего не нашёл'
 
 class MyLayout(Widget):
+
+    prior = StringProperty(None)
+
     def number_press(self, button_number):
-        if self.ids.words_output.text == "0":
+        prior = self.ids.words_output.text
+
+
+        if self.ids.words_output.text == "0" or not prior.isdigit():
             self.ids.words_output.text = str(button_number)
         elif self.ids.words_output.text == "Error":
             self.ids.words_output.text = "0"
@@ -147,17 +157,22 @@ class MyLayout(Widget):
         prior = self.ids.words_output.text
         try:
             answer = str()
-            for word in words_finder(prior):
+            words = words_finder(prior)
+
+            for word in words:
                 answer += word[0]
-            self.ids.words_output.text = answer
+            self.ids.words_output.text += '\n'
+            self.ids.words_output.text += answer
         except Exception:
             self.ids.words_output.text = 'Error'
 
     def clear(self):
         self.ids.words_output.text = "0"
 
+    def touch_words_output(self):
+        pass
+
 class DigitMemoryApp(App):
-    pass
     def build(self):
         Window.clearcolor = (1, 1, 1, 1)
         return MyLayout()
