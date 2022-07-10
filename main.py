@@ -4,10 +4,6 @@ from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.core.window import Window
 
-
-#Set the app size
-Window.size = (500, 700)
-
 #Прямое указание, какой файл дизайна использовать
 Builder.load_file('digit_memory.kv')
 
