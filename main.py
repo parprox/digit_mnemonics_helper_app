@@ -153,18 +153,31 @@ class MyLayout(Widget):
         else:
             self.ids.words_output.text += str(button_number)
 
+    def init_search(self):
+        self.prior = self.ids.words_output.text
+        self.ids.words_output.text = 'Ищу подходящие слова'
+        self.ids.main_box_layout.disabled = True
+
+
     def search(self):
-        prior = self.ids.words_output.text
+
         try:
             answer = str()
-            words = words_finder(prior)
-
-            for word in words:
-                answer += word[0]
+            if int(self.prior) < 100:
+                with open(f'words0-100/{self.prior}.txt', encoding='UTF-8') as file:
+                    for line in file:
+                        answer+=line
+            else:
+                words = words_finder(self.prior)
+                for word in words:
+                    answer += word[0]
+            self.ids.words_output.text = self.prior
             self.ids.words_output.text += '\n'
             self.ids.words_output.text += answer
+            self.ids.main_box_layout.disabled = False
         except Exception:
             self.ids.words_output.text = 'Error'
+            self.ids.main_box_layout.disabled = False
 
     def clear(self):
         self.ids.words_output.text = "0"

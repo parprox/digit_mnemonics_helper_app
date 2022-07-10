@@ -1,5 +1,6 @@
 <MyLayout>
     BoxLayout:
+        id: main_box_layout
         orientation: "vertical"
         size: root.width, root.height
 
@@ -96,4 +97,5 @@
                 text: "Поиск"
                 #background_normal: ""
                 background_color: (28/255, 255/255, 1/255, 1)
-                on_press: root.search()
+                on_press: root.init_search()
+                on_release: root.search()
