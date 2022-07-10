@@ -1,11 +1,9 @@
 from kivy.app import App
 from kivy.properties import StringProperty
-from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.core.window import Window
 
-TextInput
 
 #Set the app size
 Window.size = (500, 700)
