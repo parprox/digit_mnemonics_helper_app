@@ -1,43 +1,5 @@
-from kivy.app import App
-from kivy.properties import StringProperty
-from kivy.uix.textinput import TextInput
-from kivy.uix.widget import Widget
-from kivy.lang import Builder
-from kivy.core.window import Window
-
-TextInput
-
-#Set the app size
-Window.size = (500, 700)
-
-#Прямое указание, какой файл дизайна использовать
-Builder.load_file('digit_memory.kv')
-
-
 empty_chars_array = ["а", "б", "е", "ё", "ж", "и", "й", "л", "о",
                      "р", "у", "ф", "х", "ц", "ч", "ъ", "ы", "ь", "э", "ю", "я"]
-
-def return_letter_from_number(number):
-    if number == "1":
-        return "т"
-    elif number == "2":
-        return "н"
-    elif number == "3":
-        return "шщ"
-    elif number == "4":
-        return "м"
-    elif number == "5":
-        return "п"
-    elif number == "6":
-        return "сз"
-    elif number == "7":
-        return "г"
-    elif number == "8":
-        return "в"
-    elif number == "9":
-        return "д"
-    elif number == "0":
-        return "к"
 
 def find_specific_letter(word, letter_1, start_index, letter_2 = None):
     if letter_2 == None:
@@ -67,13 +29,27 @@ def test_for_empty_chars(word, start_index):
             break
     return result
 
-
-def create_list_from_file(input_number):
-    all_words = []
-    with open(f'{input_number}_words.txt', encoding='UTF-8') as file:
-        for line in file:
-            all_words.append(line)
-    return all_words
+def return_letter_from_number(number):
+    if number == "1":
+        return "т"
+    elif number == "2":
+        return "н"
+    elif number == "3":
+        return "шщ"
+    elif number == "4":
+        return "м"
+    elif number == "5":
+        return "п"
+    elif number == "6":
+        return "сз"
+    elif number == "7":
+        return "г"
+    elif number == "8":
+        return "в"
+    elif number == "9":
+        return "д"
+    elif number == "0":
+        return "к"
 
 def words_finder(input_number):
     words = []
@@ -138,44 +114,14 @@ def words_finder(input_number):
     else:
         return 'Я ничего не нашёл'
 
-class MyLayout(Widget):
-
-    prior = StringProperty(None)
-
-    def number_press(self, button_number):
-        prior = self.ids.words_output.text
-
-
-        if self.ids.words_output.text == "0" or not prior.isdigit():
-            self.ids.words_output.text = str(button_number)
-        elif self.ids.words_output.text == "Error":
-            self.ids.words_output.text = "0"
-        else:
-            self.ids.words_output.text += str(button_number)
-
-    def search(self):
-        prior = self.ids.words_output.text
-        try:
-            answer = str()
-            words = words_finder(prior)
-
+def main():
+    # print(words_finder(str(0)))
+    for number in range(0, 1000):
+        print(f'Обрабатываем цифру {number}')
+        words = words_finder(str(number))
+        with open(f'0-1000/{str(number)}.txt', 'w', encoding='UTF-8') as file:
             for word in words:
-                answer += word[0]
-            self.ids.words_output.text += '\n'
-            self.ids.words_output.text += answer
-        except Exception:
-            self.ids.words_output.text = 'Error'
-
-    def clear(self):
-        self.ids.words_output.text = "0"
-
-    def touch_words_output(self):
-        pass
-
-class DigitMemoryApp(App):
-    def build(self):
-        Window.clearcolor = (1, 1, 1, 1)
-        return MyLayout()
+                file.write(word[0])
 
 if __name__ == '__main__':
-    DigitMemoryApp().run()
+    main()
