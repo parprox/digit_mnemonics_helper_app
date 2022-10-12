@@ -1,5 +1,5 @@
 from kivy.app import App
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, BooleanProperty
 from kivy.uix.widget import Widget
 from kivy.lang import Builder
 from kivy.core.window import Window
@@ -135,15 +135,13 @@ def words_finder(input_number):
 class MyLayout(Widget):
 
     prior = StringProperty(None)
+    zero_trigger = BooleanProperty(False)
 
     def number_press(self, button_number):
-        prior = self.ids.words_output.text
-
-
-        if self.ids.words_output.text == "0" or not prior.isdigit():
+        if self.ids.words_output.text == "-":
             self.ids.words_output.text = str(button_number)
         elif self.ids.words_output.text == "Error":
-            self.ids.words_output.text = "0"
+            self.ids.words_output.text = "-"
         else:
             self.ids.words_output.text += str(button_number)
 
@@ -154,13 +152,16 @@ class MyLayout(Widget):
 
 
     def search(self):
-
         try:
             answer = str()
-            if int(self.prior) < 100:
+            if int(self.prior) < 100 and self.prior[0] != '0':
                 with open(f'words0-100/{self.prior}.txt', encoding='UTF-8') as file:
                     for line in file:
                         answer+=line
+            elif self.prior == '0':
+                with open(f'words0-100/{self.prior}.txt', encoding='UTF-8') as file:
+                    for line in file:
+                        answer += line
             else:
                 words = words_finder(self.prior)
                 for word in words:
@@ -169,12 +170,15 @@ class MyLayout(Widget):
             self.ids.words_output.text += '\n'
             self.ids.words_output.text += answer
             self.ids.main_box_layout.disabled = False
-        except Exception:
+
+
+        except Exception as ex:
             self.ids.words_output.text = 'Error'
             self.ids.main_box_layout.disabled = False
 
+
     def clear(self):
-        self.ids.words_output.text = "0"
+        self.ids.words_output.text = "-"
 
     def touch_words_output(self):
         pass
